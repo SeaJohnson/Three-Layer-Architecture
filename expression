@@ -1,0 +1,62 @@
+package Core;
+
+import java.awt.Color;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartFrame;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.CategoryDataset;
+import org.jfree.data.category.DefaultCategoryDataset;
+
+public class expression {
+	public static void main(String[]args) {
+		CategoryDataset mDataset = GetDataset();
+		JFreeChart mChart = ChartFactory.createLineChart("line chart",// 图名字
+				"day",// 横坐标
+				"price",// 纵坐标
+				mDataset,// 数据集
+				PlotOrientation.VERTICAL, true, // 显示图例
+				true, // 采用标准生成器
+				false);// 是否生成超链接
+		CategoryPlot mPlot = (CategoryPlot) mChart.getPlot();
+		mPlot.setBackgroundPaint(Color.LIGHT_GRAY);
+		mPlot.setRangeGridlinePaint(Color.BLUE);// 背景底部横虚线
+		mPlot.setOutlinePaint(Color.black);// 边界线
+		ChartFrame mChartFrame = new ChartFrame("折线图", mChart);
+		mChartFrame.pack();
+		mChartFrame.setVisible(true);
+		}
+	
+	public static CategoryDataset GetDataset() {
+		DefaultCategoryDataset mDataset = new DefaultCategoryDataset();
+		List<Double>ans=new ArrayList<Double>();
+		Connection connection=null;
+		PreparedStatement preparedStatement=null;
+		try{
+			connection=getConnection.getLink();
+			String sql="SELECT [开盘价(元)] FROM dbo.gushi_data";
+			preparedStatement=connection.prepareStatement(sql);
+			ResultSet resultSet=preparedStatement.executeQuery();
+			while(resultSet.next())
+			{
+				double price=resultSet.getDouble(1);
+				ans.add(price);
+			}
+			for (int i = 0; i < ans.size(); i++) {
+				mDataset.addValue(ans.get(i),"",i+"d");
+			}
+		}catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		return mDataset;
+	}
+
+}
