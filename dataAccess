@@ -1,0 +1,25 @@
+package Core;
+import java.sql.*;
+
+public class dataAccess {
+	public static void main(String []args)
+	{
+		Connection connection=getConnection.getLink();
+		//查询语句
+		String sql="SELECT 代码  FROM dbo.gushi_data";
+		try{
+		PreparedStatement preparedStatement=connection.prepareStatement(sql);
+		ResultSet resultSet=preparedStatement.executeQuery();
+		while(resultSet.next())
+		{
+			String date=resultSet.getString(1);
+			System.out.println(date);
+		}
+		}catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
+
+}
+
+
